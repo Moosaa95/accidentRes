@@ -60,6 +60,7 @@ function AuthenticatedStack() {
             }} />
       <Stack.Screen name="AddEmergencyScreen" component={AddContactScreen} />
       <Stack.Screen name="AlertSettingScreen" component={AlertSettingsScreen} />
+      {/* <Stack.Screen name="Dashboard" component={Home} /> */}
     </Stack.Navigator>
   )
 }

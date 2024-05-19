@@ -12,8 +12,8 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    if (email === 'user@example.com' && password === 'password') {
-      navigation.navigate('Dashboard');
+    if (email === 'user@gmail.com' && password === 'password') {
+      navigation.navigate('AlertSettingScreen');
     } else {
       Alert.alert('Invalid credentials', 'Please check your email and password.');
     }
