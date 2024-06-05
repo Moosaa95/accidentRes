@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Colors } from '../../constants/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Button';
+import { AuthContext } from '../../store/auth-context';
+import { createUser } from '../../utils/auth';
+import LoadingOverlay from '../../components/ui/LoadingOverlay';
 
 const SignupScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const authCtx = useContext(AuthContext)
+  const [isAuthenticating, setIsAuthenticating] = useState(false)
 
-  const handleSignup = () => {
+  const handleSignup = async() => {
     if (!email || !password || !confirmPassword) {
       Alert.alert('Please fill in all fields');
       return;
@@ -19,11 +24,26 @@ const SignupScreen = ({ navigation }) => {
       Alert.alert('Passwords do not match');
       return;
     }
+    setIsAuthenticating(true)
+    try{
+      const token = await createUser(email, password)
+      authCtx.authenticate(token)
+      // navigation.navigate('Dashboaord');
 
-    // Perform signup logic, such as sending data to a server
-    // For now, just navigate to the Dashboard screen
-    navigation.navigate('Dashboard');
+    }
+    catch(err) {
+      console.log(err);
+      Alert.alert('sign up failed', 'try again')
+    }
+    setIsAuthenticating(false)
+
+
+    
   };
+
+  if (isAuthenticating){
+    return <LoadingOverlay message="creating a user" />
+  }
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor:Colors.white }}>

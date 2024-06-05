@@ -1,7 +1,10 @@
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { Colors } from '../../constants/styles';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import Button from '../../components/Button';
+import { login } from '../../utils/auth';
+import LoadingOverlay from '../../components/ui/LoadingOverlay';
+import { AuthContext } from '../../store/auth-context';
 
 
 
@@ -10,14 +13,39 @@ import Button from '../../components/Button';
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isAuthenticating, setIsAuthenticating] = useState(false)
+  const authCtx = useContext(AuthContext)
 
-  const handleLogin = () => {
-    if (email === 'user@gmail.com' && password === 'password') {
-      navigation.navigate('AlertSettingScreen');
-    } else {
-      Alert.alert('Invalid credentials', 'Please check your email and password.');
+  console.log('login');
+
+  const handleLogin = async() => {
+
+    if (!email || !password) {
+      Alert.alert('Invalid input', 'Please enter a valid email and password.');
+      return;
     }
-  };
+
+    setIsAuthenticating(true)
+    try {
+      const token = await login(email, password)
+      console.log('l;ogin ds', token);
+      authCtx.authenticate(token)
+      // navigation.navigate('Dashboard')
+    }
+    catch (err) {
+      console.log('errr carch', err);
+      Alert.alert("you can not log in ", "please check latter")
+    }
+    
+      setIsAuthenticating(false)
+
+    
+  }
+
+if (isAuthenticating){
+  return <LoadingOverlay message="logging a user" />
+}
+
 
   return (
     <View style={styles.container}>

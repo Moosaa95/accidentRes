@@ -5,6 +5,7 @@ import { Colors } from "../../constants/styles";
 import Button from "../../components/Button";
 
 const WelcomeScreen = ({ navigation }) => {
+  console.log('ehyy', 'kdfkdfj');
   return (
     <LinearGradient
       style={styles.container}
